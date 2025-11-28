@@ -121,16 +121,16 @@ function initSocialLinks() {
 function showContactInfo() {
     const contactInfo = `
 連絡先情報:
-📧 Email: coro1273@gmail.com
-📷 Instagram: @karinrinrin__
-💼 LinkedIn: http://linkedin.com/in/karinrinrin
+📧 Email: milifecare.kagoshima@gmail.com
+📷 Instagram: @kirishimashi_milifecare
+🌐 会社HP: https://milifecare.jp/
+🔗 その他URL: https://yumegi.jp/
 
-東洋大学
-国際学部グローバルイノベーション学科
-LinkedIn Student Club 4期生
+株式会社ミライフケア
+代表取締役
     `.trim();
     
-    createCustomModal('小林果凛 - 連絡先情報', contactInfo);
+    createCustomModal('永田大地 - 連絡先情報', contactInfo);
 }
 
 // カスタムモーダル作成
@@ -216,8 +216,8 @@ function getImageAsBase64(imagePath) {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 
-                // 画像サイズを設定（正方形画像に最適化）
-                const maxSize = 512;
+                // 連絡先アイコン用に適切なサイズにリサイズ（正方形推奨）
+                const maxSize = 400; // 連絡先アイコン用に最適化
                 let canvasWidth, canvasHeight;
                 
                 if (img.width === img.height) {
@@ -238,18 +238,21 @@ function getImageAsBase64(imagePath) {
                 canvas.height = canvasHeight;
                 
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                // 画像ファイルの拡張子に応じて形式を決定
+                // 画像ファイルの拡張子に応じて形式を決定（JPEGで統一、品質を上げる）
                 const isPNG = imagePath.toLowerCase().endsWith('.png');
-                const dataURL = isPNG ? canvas.toDataURL('image/png') : canvas.toDataURL('image/jpeg', 0.8);
-                resolve(dataURL.split(',')[1]); // Base64部分のみを取得
+                const dataURL = isPNG ? canvas.toDataURL('image/png', 0.95) : canvas.toDataURL('image/jpeg', 0.9);
+                const base64 = dataURL.split(',')[1]; // Base64部分のみを取得
+                
+                console.log(`画像変換成功: ${imagePath}, サイズ: ${base64.length}文字`);
+                resolve(base64);
             } catch (error) {
-                console.log('画像変換エラー:', error);
-                resolve(''); // エラーの場合は空文字
+                console.error('画像変換エラー:', error);
+                reject(error);
             }
         };
         img.onerror = (error) => {
-            console.log('画像読み込みエラー:', error);
-            resolve(''); // エラーの場合は空文字
+            console.error('画像読み込みエラー:', imagePath, error);
+            reject(new Error(`画像の読み込みに失敗しました: ${imagePath}`));
         };
         img.src = imagePath;
     });
@@ -264,49 +267,90 @@ async function downloadContactFromModal() {
         
         // プロフィール画像をBase64で取得（エラーが発生しても続行）
         let profileImageBase64 = '';
+        let imageLoaded = false;
         try {
-            profileImageBase64 = await getImageAsBase64('IMG_5777.jpeg');
+            // まずアイコン画像.jpegを試す
+            console.log('アイコン画像.jpegを読み込み中...');
+            profileImageBase64 = await getImageAsBase64('アイコン画像.jpeg');
+            if (profileImageBase64 && profileImageBase64.length > 0) {
+                console.log('アイコン画像.jpegを読み込み成功。サイズ:', profileImageBase64.length);
+                imageLoaded = true;
+            } else {
+                console.log('アイコン画像.jpegが空、アイコン.jpegを試します...');
+            }
         } catch (error) {
-            console.log('画像取得エラー（続行）:', error);
+            console.log('アイコン画像.jpegの読み込みエラー:', error);
         }
         
-        // vCardを作成
+        // 空文字の場合はアイコン.jpegを試す
+        if (!imageLoaded) {
+            try {
+                console.log('アイコン.jpegを読み込み中...');
+                profileImageBase64 = await getImageAsBase64('アイコン.jpeg');
+                if (profileImageBase64 && profileImageBase64.length > 0) {
+                    console.log('アイコン.jpegを読み込み成功。サイズ:', profileImageBase64.length);
+                    imageLoaded = true;
+                }
+            } catch (error) {
+                console.log('アイコン.jpegの読み込みエラー:', error);
+            }
+        }
+        
+        // vCardを作成（vCard 3.0形式を使用してUTF-8エンコーディングを明示）
+        // vCard 3.0はUTF-8を標準サポートしているため、日本語文字が正しく表示される
         let vCardData = `BEGIN:VCARD
 VERSION:3.0
-FN:小林果凛
-N:小林;果凛;;;
-ORG:東洋大学 国際学部グローバルイノベーション学科
-TITLE:LinkedIn Student Club 4期生
-EMAIL;TYPE=INTERNET;TYPE=WORK:coro1273@gmail.com
-URL:https://karin-lotuscard.vercel.app
-URL;TYPE=LinkedIn:http://linkedin.com/in/karinrinrin
-URL;TYPE=Instagram:https://www.instagram.com/karinrinrin__
-NOTE:"海外で働く"を夢から現実へ\\n1年間のアメリカ留学\\n株式会社recriで長期インターン中\\nダンスサークルD-mc所属`;
+FN:永田大地
+N:永田;大地;;;
+ORG:株式会社ミライフケア
+TITLE:代表取締役
+EMAIL;TYPE=INTERNET;TYPE=WORK:milifecare.kagoshima@gmail.com
+URL;TYPE=WORK:https://milifecare.jp/
+URL;TYPE=Instagram:https://www.instagram.com/kirishimashi_milifecare?igsh=anMzbzc5MHo1ZzZw
+URL;TYPE=Website:https://yumegi.jp/
+NOTE:できるを信じる\\n子供好き\\n車好き\\n仕事や地域のために動くのが好き`;
 
         // プロフィール画像がある場合のみ追加
         if (profileImageBase64 && profileImageBase64.length > 0) {
-            vCardData += `
-PHOTO;TYPE=JPEG;ENCODING=BASE64:${profileImageBase64}`;
+            console.log('vCardに画像を追加します。Base64サイズ:', profileImageBase64.length);
+            // vCard 3.0形式: Base64データを埋め込む
+            // macOS連絡先アプリとの互換性のため、複数のフォーマットを試す
+            // 方法1: ENCODING=b を使用（多くのアプリでサポート）
+            // Base64データを75文字ごとに改行（vCard仕様に準拠）
+            const chunks = [];
+            for (let i = 0; i < profileImageBase64.length; i += 75) {
+                chunks.push(profileImageBase64.substring(i, i + 75));
+            }
+            // 継続行の先頭にスペースを追加
+            const base64Formatted = chunks.join('\n ');
+            // PHOTOフィールドを追加（ENCODING=bはBase64を意味する）
+            vCardData += `\nPHOTO;ENCODING=b;TYPE=JPEG:\n ${base64Formatted}`;
+            console.log('画像がvCardに追加されました（ENCODING=b形式）');
+        } else {
+            console.warn('画像が読み込めませんでした。画像なしでvCardを生成します。');
         }
 
         vCardData += `
 END:VCARD`;
 
-        // ファイルダウンロード
-        const blob = new Blob([vCardData], { type: 'text/vcard;charset=utf-8' });
+        // ファイルダウンロード（UTF-8エンコーディングを明示）
+        // TextEncoderを使用してUTF-8バイト配列に変換
+        const encoder = new TextEncoder();
+        const utf8Bytes = encoder.encode(vCardData);
+        const blob = new Blob([utf8Bytes], { type: 'text/vcard;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'Karin_Kobayashi.vcf'; // 小林果凛のファイル名
+        link.download = 'Daichi_Nagata.vcf'; // 永田大地のファイル名
         link.style.display = 'none';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
         
-        // ポップアップメッセージを削除し、直接ダウンロード
-        // デバイス別の処理は不要なポップアップなしで実行
+        // 保存成功の通知を表示
+        showToast('連絡先情報を保存しました');
         
     } catch (error) {
         console.error('連絡先保存エラー:', error);
