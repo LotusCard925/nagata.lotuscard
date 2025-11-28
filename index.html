@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#FF8C42">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="小林果凛">
+    <title>小林果凛 - プロフィール</title>
+    
+    <!-- ホーム画面追加用のアイコン設定 -->
+    <link rel="apple-touch-icon" href="IMG_5777.jpeg">
+    <link rel="apple-touch-icon" sizes="180x180" href="IMG_5777.jpeg">
+    <link rel="apple-touch-icon" sizes="167x167" href="IMG_5777.jpeg">
+    <link rel="apple-touch-icon" sizes="152x152" href="IMG_5777.jpeg">
+    <link rel="apple-touch-icon" sizes="144x144" href="IMG_5777.jpeg">
+    <link rel="apple-touch-icon" sizes="120x120" href="IMG_5777.jpeg">
+    <link rel="apple-touch-icon" sizes="114x114" href="IMG_5777.jpeg">
+    <link rel="apple-touch-icon" sizes="76x76" href="IMG_5777.jpeg">
+    <link rel="apple-touch-icon" sizes="72x72" href="IMG_5777.jpeg">
+    <link rel="apple-touch-icon" sizes="60x60" href="IMG_5777.jpeg">
+    <link rel="apple-touch-icon" sizes="57x57" href="IMG_5777.jpeg">
+    
+    <!-- ファビコン設定 -->
+    <link rel="icon" type="image/jpeg" sizes="32x32" href="IMG_5777.jpeg">
+    <link rel="icon" type="image/jpeg" sizes="16x16" href="IMG_5777.jpeg">
+    <link rel="shortcut icon" href="IMG_5777.jpeg">
+    
+    <!-- Android用アイコン -->
+    <link rel="icon" sizes="192x192" href="IMG_5777.jpeg">
+    <link rel="icon" sizes="512x512" href="IMG_5777.jpeg">
+    
+    <!-- PWA用のマニフェスト -->
+    <link rel="manifest" href="manifest.json">
+    
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Zen+Maru+Gothic:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <div class="header">
+        </div>
+
+        <!-- バナー画像 -->
+        <div class="banner">
+            <div class="banner-image">
+                <img src="8FEA0D4B-62E7-4478-9014-54A0B1128461.jpeg" alt="Background" class="banner-bg-image clickable-image" onclick="openImageModal('8FEA0D4B-62E7-4478-9014-54A0B1128461.jpeg', '')">
+            </div>
+        </div>
+
+        <!-- プロフィール情報 -->
+        <div class="profile-section">
+            <div class="profile-logo">
+                    <div class="logo-circle">
+                    <img src="IMG_5777.jpeg" alt="小林果凛 Profile" class="profile-image clickable-image" onclick="openImageModal('IMG_5777.jpeg', '')">
+                </div>
+                <div class="profile-name">小林　果凛</div>
+            </div>
+
+            <div class="catchphrase">"海外で働く"を夢から現実へ</div>
+
+            <div class="title">東洋大学<br>国際学部グローバルイノベーション学科</div>
+            <div class="subtitle">LinkedIn Student Club 4期生</div>
+
+            <!-- タグ -->
+            <div class="tags">
+                <div class="tag-row">
+                    <span class="tag">1年間のアメリカ留学</span>
+                    <span class="tag">ダンスサークルD-mc</span>
+                </div>
+                <div class="tag-row">
+                    <span class="tag">株式会社recri長期インターン</span>
+                </div>
+            </div>
+
+        <!-- アクションボタン -->
+        <div class="action-buttons">
+            <button class="btn-secondary" onclick="downloadContactFromModal()">
+                <i class="fas fa-save"></i>
+                情報の保存
+            </button>
+            <button class="btn-edit" onclick="toggleEditMode()" style="display: none;">
+                <i class="fas fa-edit"></i>
+                編集モード
+            </button>
+        </div>
+
+            <!-- タブセクション -->
+            <div class="tab-section">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="showTab('about')">自己紹介</button>
+                    <button class="tab-btn" onclick="showTab('activities')">活動</button>
+                    <button class="tab-btn" onclick="showTab('gallery')">画像</button>
+                </div>
+                
+                <div class="tab-content">
+                    <div id="about" class="tab-panel active">
+                        <h3>自己紹介</h3>
+                        <div class="intro-toggle">
+                            <div class="intro-preview">
+                                <p>東洋大学国際学部グローバルイノベーション学科に在学中です。</p>
+                                <p>"海外で働く"という夢を現実にするため、1年間のアメリカ留学を経験しました。</p>
+                                <button class="toggle-btn" onclick="toggleIntro()">
+                                    <span class="toggle-text">もっと詳しく見る</span>
+                                    <i class="fas fa-chevron-down toggle-icon"></i>
+                                </button>
+                            </div>
+                            <div class="intro-detail" style="display: none;">
+                                <p>東洋大学国際学部グローバルイノベーション学科に在学中です。</p>
+                                <p>"海外で働く"という夢を現実にするため、1年間のアメリカ留学を経験しました。</p>
+                                <p>現在は株式会社recriで長期インターンとして活動しており、LinkedIn Student Club 4期生としても活躍しています。また、ダンスサークルD-mcにも所属し、多様な活動を通じて成長を続けています。</p>
+                                
+                                <button class="toggle-btn" onclick="toggleIntro()">
+                                    <span class="toggle-text">簡潔に表示</span>
+                                    <i class="fas fa-chevron-up toggle-icon"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="activities" class="tab-panel">
+                        <h3>活動</h3>
+                        <div class="activity-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <div>
+                                <h4>東洋大学</h4>
+                                <p>国際学部グローバルイノベーション学科</p>
+                                <p class="activity-detail">在学中</p>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <i class="fas fa-plane"></i>
+                            <div>
+                                <h4>アメリカ留学</h4>
+                                <p>1年間の留学経験</p>
+                                <p class="activity-detail">"海外で働く"を夢から現実へ</p>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <i class="fas fa-briefcase"></i>
+                            <div>
+                                <h4>株式会社recri</h4>
+                                <p>長期インターン中</p>
+                                <p class="activity-detail">実務経験を積んでいます</p>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <i class="fab fa-linkedin"></i>
+                            <div>
+                                <h4>LinkedIn Student Club</h4>
+                                <p>4期生</p>
+                                <p class="activity-detail">学生コミュニティで活動中</p>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <i class="fas fa-music"></i>
+                            <div>
+                                <h4>ダンスサークルD-mc</h4>
+                                <p>所属</p>
+                                <p class="activity-detail">ダンスを通じて仲間と共に成長</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="gallery" class="tab-panel">
+                        <h3>画像</h3>
+                        <div class="gallery-container">
+                            <img src="IMG_8940.jpeg" alt="Gallery Image" class="gallery-image clickable-image" onclick="openImageModal('IMG_8940.jpeg', '')">
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <!-- ソーシャルメディアリンク -->
+            <div class="social-links">
+                <a href="mailto:coro1273@gmail.com" class="social-link">
+                    <div class="social-icon email">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="social-info">
+                        <div class="social-name">Email</div>
+                        <div class="social-handle">coro1273@gmail.com</div>
+                    </div>
+                    <div class="social-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a href="https://www.instagram.com/karinrinrin__?igsh=ZWozMjJicWlvcXYy&utm_source=qr" class="social-link" target="_blank">
+                    <div class="social-icon instagram">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <div class="social-info">
+                        <div class="social-name">Instagram</div>
+                        <div class="social-handle">@karinrinrin__</div>
+                    </div>
+                    <div class="social-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a href="http://linkedin.com/in/karinrinrin" class="social-link" target="_blank">
+                    <div class="social-icon linkedin">
+                        <i class="fab fa-linkedin"></i>
+                    </div>
+                    <div class="social-info">
+                        <div class="social-name">LinkedIn</div>
+                        <div class="social-handle">karinrinrin</div>
+                    </div>
+                    <div class="social-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+        
+        <!-- フッター -->
+        <div class="footer">
+            <p>Karin Kobayashi</p>
+        </div>
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
